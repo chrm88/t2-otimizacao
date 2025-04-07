@@ -84,6 +84,7 @@ def calcular_deslocamento(ptc, melhor):
 particulas_iniciais = [gerar_particula() for _ in range(n_particulas)]
 particulas_atuais = particulas_iniciais
 index_melhor_particula = -1
+melhor_particula_cpy = {}
 melhor_fitness = 0
 controle_ultima_melhora = -1
 
@@ -94,8 +95,9 @@ for it in range(max_iteracoes_geral):
     if fitness_atual > melhor_fitness:
       melhor_fitness = fitness_atual
       index_melhor_particula = i
+      melhor_particula_cpy = ptc.copy()
       controle_ultima_melhora = it
-  
+      
   ptc_deslocadas = [ptc.copy() for ptc in particulas_atuais]
   for i, ptc in enumerate(particulas_atuais):
     if i == index_melhor_particula:
@@ -111,7 +113,7 @@ for it in range(max_iteracoes_geral):
     break
   
   if controle_ultima_melhora + max_iteracoes_melhora == it:
-    print(f"Se passaram {max_iteracoes_melhora} sem melhora, interrompendo...")
+    print(f"Se passaram {max_iteracoes_melhora} iterações sem melhora, interrompendo...")
     break
   
   if time.time() > horario_inicio + tempo_limite:
@@ -119,6 +121,6 @@ for it in range(max_iteracoes_geral):
     break
     
   if it % 10 == 0:
-    print(f"Iteração {it}: Melhor Solução {particulas_atuais[index_melhor_particula]} com o melhor fitness: {melhor_fitness}")
+    print(f"Iteração {it}: Melhor Solução {melhor_particula_cpy} com o melhor fitness: {melhor_fitness}")
     
-print(f"Resultado final: Melhor Fitness {melhor_fitness}")
+print(f"Resultado final: Solução {melhor_particula_cpy} com fitness {melhor_fitness}")
