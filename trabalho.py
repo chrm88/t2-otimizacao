@@ -78,6 +78,7 @@ def busca_local(ptc):
 
 def calcular_deslocamento(ptc, melhor):  
   ptc_deslocada = ptc + np.rint(vel_prop * (melhor - ptc))
+  ptc_deslocada = np.clip(ptc_deslocada, vd_min, vd_max).astype(int)
   return ptc_deslocada
   
 particulas_iniciais = [gerar_particula() for _ in range(n_particulas)]
@@ -95,7 +96,7 @@ for it in range(max_iteracoes_geral):
       index_melhor_particula = i
       controle_ultima_melhora = it
   
-  ptc_deslocadas = particulas_atuais
+  ptc_deslocadas = [ptc.copy() for ptc in particulas_atuais]
   for i, ptc in enumerate(particulas_atuais):
     if i == index_melhor_particula:
       ptc_deslocadas[i] = busca_local(particulas_atuais[i])
@@ -103,7 +104,7 @@ for it in range(max_iteracoes_geral):
     
     ptc_deslocadas[i] = calcular_deslocamento(ptc, particulas_atuais[index_melhor_particula])
   
-  particulas_atuais = ptc_deslocadas
+  particulas_atuais = ptc_deslocadas.copy()
   
   if melhor_fitness == valor_alvo:
     print(f"Melhor fitness encontrado na iteração {it}")
