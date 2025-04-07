@@ -38,30 +38,28 @@ def avaliacao(solucao):
         v = v + (solucao.item(x) * funcaoobjetivo[x])
     return v
 
-# avaliacao(solucao)
-# viavel(solucao)
-
-
+# Particle Swarm Optimization :: Grupo: Carlos, Matheus e Waldemar
 # Considere que o intervalo das variáveis de decisão seja de zero a dez.
 # Parâmetros: 10 partículas, velocidade proporcional de 20% arredondada aleatoriamente para cima ou para baixo, busca local por escolha e troca de uma variável aleatoriamente. 
 # Condições de parada: 1000 iterações ou 1 hora ou alcançar valor=78 ou 50 iterações sem melhorar. 
 # Saídas: a cada 10 iterações mostrar a melhor solução encontrada completa.
 
-horario_inicio = time.time()
+horario_inicio = time.time() # guarda o horário de início para o controle do limite de 1 hora
 tempo_limite = 60 * 60 # em segundos, 60 minutos * 60 segundos
 
 # intervalo mínimo-máximo para as variáveis de decisão
 vd_min = 0
 vd_max = 10
 
-# parametros para o PSO
+# parametros para o PSO pré-definidos no problema
 n_particulas = 10
 vel_prop = 0.20 # 20%
 max_iteracoes_geral = 1000
 max_iteracoes_melhora = 50
 valor_alvo = 78
 
-# gera uma nova particula com valores aleatorios dentro do intervalo limite para variaveis de decisão e garante que a particula gerada seja viável
+# gera uma nova particula com valores aleatorios dentro do intervalo limite para variaveis de decisão 
+# garante que a particula gerada seja viável
 def gerar_particula():
   nova_particula = [randint(vd_min, vd_max) for _ in range(nvd)]
   while not viavel(nova_particula):
@@ -69,7 +67,9 @@ def gerar_particula():
   
   return np.array(nova_particula)
 
-# executa a busca local em uma particula de acordo com as instruções, trocando o valor de uma variável de forma aleatória, garantindo que ainda seja viável
+# executa a busca local em uma particula de acordo com as instruções 
+# trocando o valor de uma variável de forma aleatória
+# garantindo que ainda seja viável
 def busca_local(ptc):
   troca_i = randint(0, nvd - 1)
   troca_val = randint(vd_min, vd_max)
@@ -87,7 +87,8 @@ def busca_local(ptc):
 
 # calcula o deslocamento de uma partícula em direção ao melhor
 # utiliza a fórmula da velocidade proporcional A = A + vp * (vetor_B - vetor_A)
-# arredonda o resultado da conta de forma aleatória e garante que seja viável, caso não seja, gera uma nova
+# arredonda o resultado da conta de forma aleatória
+# verifica se é viável, e caso não seja, gera uma nova
 def calcular_deslocamento(ptc, melhor):
   subtr_vetores = vel_prop * (melhor - ptc)
   nums_arredondados = [ (math.ceil(num) if (randint(0, 1) == 1) else math.floor(num)) for num in subtr_vetores ]
