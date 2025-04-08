@@ -138,9 +138,9 @@ for it in range(max_iteracoes_geral):
     ptc_deslocadas[i] = calcular_deslocamento(ptc, melhor_particula)
   
   # verifica a condição de parada que é o valor do melhor fitness ter chegado no ideal
-  if melhor_fitness == valor_alvo:
-    print(f"Fitness ideal encontrado na iteração {it}")
-    break
+  # if melhor_fitness == valor_alvo:
+  #   print(f"Fitness ideal encontrado na iteração {it}")
+  #   break
 
   # verifica o limite máximo de iterações desde a ultima melhora
   # se a última melhora somada ao limite for igual a iteração atual, interrompe as iterações 
