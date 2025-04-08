@@ -26,7 +26,7 @@ def viavel(sol):
     for x in range(10):
         valorrest = 0
         for y in range(10):
-            valorrest = valorrest + sol[y] * restricoes[x*11+y]
+            valorrest = valorrest + (sol[y] * restricoes[x*11+y])
         if (valorrest > restricoes[x*11+10]):
             eviavel = 1
     return eviavel == 0
@@ -59,46 +59,53 @@ max_iteracoes_melhora = 50
 valor_alvo = 78
 
 # gera uma nova particula com valores aleatorios dentro do intervalo limite para variaveis de decisão 
-# garante que a particula gerada seja viável
 def gerar_particula():
   nova_particula = [randint(vd_min, vd_max) for _ in range(nvd)]
+  
+  # garante que a particula gerada seja viável
   while not viavel(nova_particula):
     nova_particula = gerar_particula()
   
   return np.array(nova_particula)
 
+
 # executa a busca local em uma particula de acordo com as instruções 
-# trocando o valor de uma variável de forma aleatória
-# garantindo que ainda seja viável
 def busca_local(ptc):
+  # trocando o valor de uma variável de forma aleatória
   troca_i = randint(0, nvd - 1)
   troca_val = randint(vd_min, vd_max)
   
+  # garantindo que o valor aleatorio nao seja igual ao atual
   while troca_val == ptc[troca_i]:
     troca_val = randint(vd_min, vd_max)
     
   resultado = ptc.copy()
   resultado[troca_i] = troca_val
   
+  # garantindo que ainda seja viável
   if not viavel(resultado):
     return busca_local(ptc)
     
   return resultado
 
+
 # calcula o deslocamento de uma partícula em direção ao melhor
-# utiliza a fórmula da velocidade proporcional A = A + vp * (vetor_B - vetor_A)
-# arredonda o resultado da conta de forma aleatória
-# verifica se é viável, e caso não seja, gera uma nova
 def calcular_deslocamento(ptc, melhor):
+  # utiliza a fórmula da velocidade proporcional A = A + vp * (vetor_B - vetor_A), executando a subtração e multiplicação primeiro
   subtr_vetores = vel_prop * (melhor - ptc)
+  
+  # arredonda o resultado da conta de forma aleatória
   nums_arredondados = [ (math.ceil(num) if (randint(0, 1) == 1) else math.floor(num)) for num in subtr_vetores ]
   
+  # A + resultado arredondado
   ptc_deslocada = ptc + nums_arredondados
-  ptc_deslocada = np.clip(ptc_deslocada, vd_min, vd_max).astype(int)
+  
+  # verifica se é viável, e caso não seja, gera uma nova particula aleatoriamente
   if viavel(ptc_deslocada):
     return ptc_deslocada
   else:
     return gerar_particula()
+
 
 # gera um grupo inicial de N particulas
 particulas_iniciais = [gerar_particula() for _ in range(n_particulas)]
